@@ -13,7 +13,7 @@ def main():
         fig = utilities.performance_plot(df_scores, giocatori_to_keep)
         st.pyplot(fig=fig)
     with tabs[1]:
-        st.text("VCIODUJVJ")
+        st.text("miao")
 
 
 
