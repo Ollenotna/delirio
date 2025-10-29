@@ -5,17 +5,20 @@ import seaborn as sns
 import warnings
 from collections import Counter
 import matplotlib.ticker as ticker
+import streamlit as st
 
 # Filter and suppress only the specific warning related to data validation
 warnings.filterwarnings("ignore")
 
 def _read_data(filepath: str) -> tuple[pd.DataFrame, pd.DataFrame]:
+
     players = pd.read_excel(filepath, sheet_name=1, header=None)
     players = players.rename(columns={0: 'player', 1: 'score'})
-    
+
     scores = pd.read_excel(filepath, sheet_name=0)
 
     df_scores = pd.DataFrame()
+    df_podium_podium_scores = pd.DataFrame()
     df_pairs = pd.DataFrame()
     sheet_number = 3
     while True:
@@ -77,7 +80,7 @@ def _read_data(filepath: str) -> tuple[pd.DataFrame, pd.DataFrame]:
     df_pairs.drop(columns = 'Posizione', inplace = True)
     df_pairs.reset_index(inplace=True, drop=True)
 
-    return df_scores, df_pairs
+    return df_scores, df_pairs, last_match
 
 def _preprocess_scores(df_scores: pd.DataFrame) -> pd.DataFrame:
     # Calculating the rank and punti totali columns
@@ -115,12 +118,6 @@ def _preprocess_scores(df_scores: pd.DataFrame) -> pd.DataFrame:
 
     return df_scores
 
-def load_data(filepath: str = 'data/Punteggi.xlsx'):
-    df_scores, df_pairs = _read_data(filepath)
-    df_scores = _preprocess_scores(df_scores)
-    giocatori_to_keep = _filter_players(df_scores)
-
-    return df_scores, df_pairs, giocatori_to_keep
 
 def _filter_players(df_scores: pd.DataFrame) -> list[str]:
     df_scores['Presenza'] = (df_scores['Posizione'] != 0).astype(int)
@@ -133,8 +130,15 @@ def _filter_players(df_scores: pd.DataFrame) -> list[str]:
 
     return sorted(giocatori_to_keep)
 
+def load_data(filepath: str = 'data/Punteggi.xlsx'):
+    df_scores, df_pairs, last_match = _read_data(filepath)
+    df_scores = _preprocess_scores(df_scores)
+    giocatori_to_keep = _filter_players(df_scores)
+
+    return df_scores, df_pairs, last_match, giocatori_to_keep
+
 def performance_plot(df_scores, giocatori_to_keep):
-    norm_value = 10
+    norm_value = 2
 
     fig, ax = plt.subplots(figsize = (8, 10))
 
@@ -150,36 +154,103 @@ def performance_plot(df_scores, giocatori_to_keep):
     df_piazzamento_summ = df_piazzamento.groupby('Giocatore')[['Norm_posizione']].mean().sort_values(by='Norm_posizione', ascending=False).reset_index()
     df_piazzamento_summ
 
-    #cmap = sns.diverging_palette(10, 133, as_cmap=True)
-    cmap = sns.color_palette("RdYlGn", as_cmap=True)
-    sns.scatterplot(df_piazzamento_summ, x = 'Norm_posizione', y='Giocatore', hue='Norm_posizione', palette=cmap, legend=False, s=75, edgecolor='black')
+    return df_piazzamento_summ
 
-    plt.xlabel("")
-    plt.ylabel("")
-    plt.xlim(-5, 5)
+def performance_bar(selected_player):
+    df_summary = st.session_state.performance_summary
 
-    # Add color bar at the bottom
-    sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(vmin=-5, vmax=5))
-    cbar = fig.colorbar(sm, ax=ax, orientation="horizontal", pad=0)
-    cbar.ax.set_xticks([])
+    player_perf = df_summary.loc[df_summary['Giocatore'] == selected_player, 'Norm_posizione'].values[0]
 
-    # Get color bar position for accurate text placement
-    cbar_pos = cbar.ax.get_position()
-    x_left = cbar_pos.x0   
-    x_right = cbar_pos.x1
-    y_pos = cbar_pos.y0 + 0.14  
+    # Create figure (vertical bar)
+    fig, ax = plt.subplots(figsize=(0.4, 1))
+    ax.set_ylim(-1, 1)   # Performance range
+    ax.set_xlim(0, 1)    # Width of bar
+    ax.axis('off')
 
-    # Add labels for first and last positions
-    fig.text(x_left, y_pos, "Ultimo posto", ha="left", fontsize=12, color="red", fontweight="bold")
-    fig.text(x_right, y_pos, "Primo posto", ha="right", fontsize=12, color="green", fontweight="bold")
+    # Gradient bar
+    cmap = sns.color_palette("RdYlGn_r", as_cmap=True)
+    gradient = np.linspace(-1, 1, 500).reshape(-1, 1)  # vertical
+    ax.imshow(gradient, aspect='auto', cmap=cmap, extent=[0, 1, -1, 1])
 
-    # Adjust layout to fit color bar and labels properly
-    plt.subplots_adjust(bottom=0.2)
-    plt.grid(axis="y", alpha=0.2)
+    # Player line
+    ax.axhline(player_perf, color='black', linewidth=1)
 
-    plt.title('Performance', weight = 'bold')
-    plt.rc("font", size=12)
+    # Labels for top and bottom
+    ax.text(0.5, 1, "Primo posto", ha='center', va='bottom', fontsize=8, fontweight='bold', color='green')
+    ax.text(0.5, -1, "Ultimo posto", ha='center', va='top', fontsize=8, fontweight='bold', color='red')
 
-    # plt.savefig('./Plots/Performance_giocatori.pdf', bbox_inches = 'tight')
-    # plt.show()
     return fig
+
+def load_players(filepath: str= 'data/Punteggi.xlsx'):
+    players = pd.read_excel(filepath, sheet_name=1, header=None)
+    players = players.rename(columns={0: 'player', 1: 'score', 2: 'soprannome'})
+    players['nome_finale'] = players['soprannome'].where(players['soprannome'].notna() & (players['soprannome'] != ''), players['player'])
+
+    return players['player'].to_list()
+
+def podium_dataframe(df_scores, giocatori_to_keep):
+    df_podium = df_scores[['Posizione', 'Giocatore']].copy()
+    df_podium = df_podium.groupby('Giocatore').aggregate(PrimoPosto = ('Posizione', lambda x: sum(x == 1)),
+                                                         SecondoPosto = ('Posizione', lambda x: sum(x == 2)),
+                                                         TerzoPosto = ('Posizione', lambda x: sum(x == 3)),
+                                                        ).reset_index()
+    df_podium["Total"] = df_podium["PrimoPosto"] + df_podium["SecondoPosto"] + df_podium["TerzoPosto"]
+    df_podium = df_podium[df_podium['Giocatore'].isin(giocatori_to_keep)]
+    
+    return df_podium
+
+def ultimo_dataframe(df_scores, giocatori_to_keep):
+    df_ultimo = df_scores.copy()
+    df_ultimo['ultimo'] = df_scores['Posizione'] / df_scores['Coppie']
+    df_ultimo = df_ultimo[['ultimo', 'Giocatore']]
+    df_ultimo = df_ultimo.groupby('Giocatore').aggregate(UltimoPosto = ('ultimo', lambda x: sum(x == 1)),).reset_index()
+    df_ultimo = df_ultimo[df_ultimo['Giocatore'].isin(giocatori_to_keep)]
+
+    return df_ultimo
+
+def stats_podio_ultimi(df_scores, giocatori_to_keep, selected_player):
+    df_podium = podium_dataframe(df_scores, giocatori_to_keep)
+    df_ultimo = ultimo_dataframe(df_scores, giocatori_to_keep)
+
+    n_primi = df_podium[df_podium['Giocatore']==selected_player]['PrimoPosto'].values[0]
+    n_secondi = df_podium[df_podium['Giocatore']==selected_player]['SecondoPosto'].values[0]
+    n_terzi = df_podium[df_podium['Giocatore']==selected_player]['TerzoPosto'].values[0]
+    n_ultimi = df_ultimo[df_ultimo['Giocatore']==selected_player]['UltimoPosto'].values[0]
+
+    return n_primi, n_secondi, n_terzi, n_ultimi
+
+
+def delta_plot(df_scores, selected_player):
+    df_delta_plot = df_scores[df_scores['Giocatore']==selected_player][['Giocatore', 'Tappa', 'Rank', 'Delta Rank']].copy()
+    df_delta_plot.sort_values(by='Tappa', ascending=True, inplace=True)
+
+    delta_list = df_delta_plot['Delta Rank'].to_list()
+    curr_delta = df_delta_plot[df_delta_plot['Tappa'] == max(df_delta_plot['Tappa'])]['Delta Rank'].values[0]
+    curr_position = df_delta_plot[df_delta_plot['Tappa'] == max(df_delta_plot['Tappa'])]['Rank'].values[0]
+    curr_position = curr_position.astype(int)
+
+    return delta_list, curr_delta, curr_position
+
+def bonus_malus_dataframe(df_scores, giocatori_to_keep):
+    df_bonus_malus = df_scores[['Giocatore', 'Punto Braciola', 'Punto Cocktail', 'Penalità/Bonus', 'Tappa']].copy()
+    df_bonus_malus['Bonus'] = df_bonus_malus['Penalità/Bonus'].apply(lambda x: x if x > 0 else 0)
+    df_bonus_malus['Malus'] = df_bonus_malus['Penalità/Bonus'].apply(lambda x: x if x < 0 else 0)
+    df_bonus_malus = df_bonus_malus.groupby('Giocatore')[['Punto Braciola', 'Punto Cocktail', 'Bonus', 'Malus']].sum().reset_index()
+    df_bonus_malus['Netto'] = df_bonus_malus.iloc[:, 1:].sum(axis = 1)
+    df_bonus_malus = df_bonus_malus[df_bonus_malus['Giocatore'].isin(giocatori_to_keep)]
+    df_bonus_malus = df_bonus_malus[df_bonus_malus['Netto']!=0]
+    df_bonus_malus.sort_values(by='Netto', ascending=False, inplace=True)
+    df_bonus_malus.reset_index(drop=True, inplace=True)
+    df_bonus_malus.head()
+
+    return df_bonus_malus
+
+def stats_bonus_malus(df_scores, giocatori_to_keep, selected_player):
+    df_bonus_malus = bonus_malus_dataframe(df_scores, giocatori_to_keep)
+
+    pt_braciole = df_bonus_malus[df_bonus_malus['Giocatore']==selected_player]['Punto Braciola'].values[0].astype(int)
+    pt_cocktail = df_bonus_malus[df_bonus_malus['Giocatore']==selected_player]['Punto Cocktail'].values[0].astype(int)
+    pt_bonus = df_bonus_malus[df_bonus_malus['Giocatore']==selected_player]['Bonus'].values[0].astype(int)
+    pt_malus = df_bonus_malus[df_bonus_malus['Giocatore']==selected_player]['Malus'].values[0].astype(int)
+
+    return pt_braciole, pt_cocktail, pt_bonus, pt_malus
