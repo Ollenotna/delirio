@@ -30,8 +30,13 @@ with col2:
 
 
 
+# Cache the function
+@st.cache_data(show_spinner=False)
+def load_data_cached():
+    return utilities.load_data()
+
 # Load data
-df_scores, df_pairs, giocatori_to_keep = utilities.load_data()
+df_scores, df_pairs, giocatori_to_keep = load_data_cached()
 
 # Cache the performance summary in session state
 if "performance_summary" not in st.session_state:
