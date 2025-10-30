@@ -2,7 +2,7 @@ import streamlit as st
 import time
 
 # If somehow no player selected, redirect back to login
-if "player_name" not in st.session_state or not st.session_state.player_name:
+if "nickname" not in st.session_state or not st.session_state.nickname:
     st.warning("No player selected. Redirecting to login...")
     st.session_state.loading = False
     st.rerun()

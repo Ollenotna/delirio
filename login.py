@@ -3,8 +3,8 @@ import utilities
 
 df_players = utilities.load_players()
 
-if "player_name" not in st.session_state:
-    st.session_state.player_name = None
+if "nickname" not in st.session_state:
+    st.session_state.nickname = None
 
 if "loading" not in st.session_state:
     st.session_state.loading = False
