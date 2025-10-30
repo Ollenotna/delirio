@@ -55,7 +55,7 @@ def show_loading():
 
     # Stop loading and rerun to show stats
     st.session_state.loading = False
-    st.experimental_rerun()
+    st.rerun()
 
 
 # -------------------------------
