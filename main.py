@@ -1,82 +1,87 @@
+# main.py
 import streamlit as st
 import utilities
 
-def main():
-    # Initialize session state
-    if "nickname" not in st.session_state:
-        st.session_state.nickname = None
-    if "loading" not in st.session_state:
-        st.session_state.loading = False
+# -------------------------------
+# Initialize session state
+# -------------------------------
+if "nickname" not in st.session_state:
+    st.session_state.nickname = None
 
-    # --- Page selection logic ---
-    if st.session_state.nickname is None:
-        # User not logged in → show login page
-        st.title("🎮 Login")
-        show_login_page()
-    elif st.session_state.loading:
-        # Show loading page
-        show_loading_page()
-    else:
-        # Logged in → show statistics / classifica
-        show_stats_pages()
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
 
-# --- Login page ---
-def show_login_page():
-    df_players = utilities.load_players()
+if "loading" not in st.session_state:
+    st.session_state.loading = False
+
+# -------------------------------
+# Load player data
+# -------------------------------
+df_players = utilities.load_players()
+
+# -------------------------------
+# LOGIN PAGE
+# -------------------------------
+def show_login():
+    st.title("🎮 Login")
 
     selected_nickname = st.selectbox(
         "Seleziona il tuo nome:",
         ["-- Nessun selezionato --"] + df_players['nickname'].to_list()
     )
 
-    if selected_nickname != "-- Nessun selezionato --":
-        if st.button("Login"):
-            selected_player = df_players[df_players['nickname'] == selected_nickname]['player'].values[0]
-            st.session_state.nickname = selected_nickname
-            st.session_state.player_name = selected_player
-            st.session_state.loading = True
-            st.experimental_rerun()
+    if st.button("Login") and selected_nickname != "-- Nessun selezionato --":
+        # Set session state
+        st.session_state.nickname = selected_nickname
+        st.session_state.logged_in = True
+        st.session_state.loading = True
+        st.experimental_rerun()
 
-# --- Loading page ---
-def show_loading_page():
+
+# -------------------------------
+# LOADING PAGE
+# -------------------------------
+def show_loading():
     st.markdown("<h3 style='text-align:center;'>Caricamento...</h3>", unsafe_allow_html=True)
     my_bar = st.progress(0)
+    import time
 
-    # Simulate loading
-    for i in range(100):
-        my_bar.progress(i + 1)
+    for percent_complete in range(100):
+        time.sleep(0.00001)  # adjust speed
+        my_bar.progress(percent_complete + 1)
+
+    time.sleep(0.2)
     my_bar.empty()
 
-    # Stop loading and go to stats
+    # Stop loading and rerun to show stats
     st.session_state.loading = False
     st.experimental_rerun()
 
-# --- Stats / Classifica pages ---
-def show_stats_pages():
+
+# -------------------------------
+# STATISTICS / MAIN PAGE
+# -------------------------------
+def show_stats():
     st.title(f"Benvenuto, {st.session_state.nickname}!")
 
-    tabs = st.tabs(["Statistiche", "Classifica", "Logout"])
+    df_scores, df_pairs, giocatori_to_keep = utilities.load_data()
 
+    if "performance_summary" not in st.session_state:
+        st.session_state.performance_summary = utilities.performance_plot(df_scores, giocatori_to_keep)
+
+    tabs = st.tabs([f"Statistiche di {st.session_state.nickname}", "Statistiche Delirio"])
     with tabs[0]:
-        try:
-            import statistics
-            statistics.run()  # Wrap your statistics page logic in run()
-        except Exception as e:
-            st.error(f"Errore nel caricamento delle statistiche: {e}")
-
+        st.text('Statistiche principali')
     with tabs[1]:
-        try:
-            import classifica
-            classifica.run()  # Wrap your classifica logic in run()
-        except Exception as e:
-            st.error(f"Errore nel caricamento della classifica: {e}")
-
-    with tabs[2]:
-        if st.button("Logout"):
-            st.session_state.nickname = None
-            st.session_state.player_name = None
-            st.experimental_rerun()
+        st.text("Statistiche delirio")
 
 
-if __name__ == "__main__":
-    main()
+# -------------------------------
+# LOGIC SWITCH
+# -------------------------------
+if not st.session_state.logged_in:
+    show_login()
+elif st.session_state.loading:
+    show_loading()
+else:
+    show_stats()
