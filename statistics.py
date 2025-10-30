@@ -9,7 +9,7 @@ if "nickname" not in st.session_state or not st.session_state.nickname:
 
 col1, col2 = st.columns([0.3, 0.7], border=False)
 with col1:
-    st.title('miao')
+    st.images("images/logo_delirio.png")
 
 with col2:
     st.markdown(
