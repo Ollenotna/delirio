@@ -11,11 +11,14 @@ if "loading" not in st.session_state:
     st.session_state.loading = False
 
 def main():
+    print(f"DEBUG: nickname in session_state: {'nickname' in st.session_state}")
+    print(f"DEBUG: nickname value: {st.session_state.get('nickname', 'NOT SET')}")
+    
     # If no one is logged in → show only the login page
     if "nickname" not in st.session_state or not st.session_state.nickname:
         pages = {
             "Login": [
-                st.Page("login.py", title="Accedi"),
+                st.Page("login_delirio.py", title="Accedi"),
             ],
         }
     elif "loading" in st.session_state and st.session_state.loading:
@@ -27,11 +30,11 @@ def main():
         # If logged in → show only the stats page
         pages = {
             "Risultati": [
-                st.Page("statistics.py", title=f"Statistiche"),
+                st.Page("statistics_delirio.py", title=f"Statistiche"),
                 st.Page("classifica.py", title=f"Classifica")
             ],
             "Account": [
-                st.Page("logout.py", title="Logout"),
+                st.Page("logout_delirio.py", title="Logout"),
             ]
         }
 

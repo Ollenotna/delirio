@@ -1,12 +1,6 @@
 import streamlit as st
 import utilities
 
-# Redirect protection
-if "nickname" not in st.session_state or not st.session_state.nickname:
-    st.warning("⚠️ Effettua il log in prima.")
-    st.rerun()
-
-
 col1, col2 = st.columns([0.3, 0.7], border=False)
 with col1:
     st.image("images/logo_delirio.png")
