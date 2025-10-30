@@ -17,9 +17,9 @@ def main():
     else:
         # If logged in → show only the stats page
         pages = {
-            "Statistiche": [
-                st.Page("statistics_singole.py", title=f"Statistiche di {st.session_state.player_name}"),
-                st.Page("statistics_gruppo.py", title=f"Statistiche di gruppo")
+            "Risultati": [
+                st.Page("statistics.py", title=f"Statistiche"),
+                st.Page("classifica.py", title=f"Classifica")
             ],
             "Account": [
                 st.Page("logout.py", title="Logout"),

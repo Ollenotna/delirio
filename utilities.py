@@ -80,7 +80,7 @@ def _read_data(filepath: str) -> tuple[pd.DataFrame, pd.DataFrame]:
     df_pairs.drop(columns = 'Posizione', inplace = True)
     df_pairs.reset_index(inplace=True, drop=True)
 
-    return df_scores, df_pairs, last_match
+    return df_scores, df_pairs
 
 def _preprocess_scores(df_scores: pd.DataFrame) -> pd.DataFrame:
     # Calculating the rank and punti totali columns
@@ -131,11 +131,11 @@ def _filter_players(df_scores: pd.DataFrame) -> list[str]:
     return sorted(giocatori_to_keep)
 
 def load_data(filepath: str = 'data/Punteggi.xlsx'):
-    df_scores, df_pairs, last_match = _read_data(filepath)
+    df_scores, df_pairs = _read_data(filepath)
     df_scores = _preprocess_scores(df_scores)
     giocatori_to_keep = _filter_players(df_scores)
 
-    return df_scores, df_pairs, last_match, giocatori_to_keep
+    return df_scores, df_pairs, giocatori_to_keep
 
 def performance_plot(df_scores, giocatori_to_keep):
     norm_value = 2
@@ -183,10 +183,16 @@ def performance_bar(selected_player):
 
 def load_players(filepath: str= 'data/Punteggi.xlsx'):
     players = pd.read_excel(filepath, sheet_name=1, header=None)
-    players = players.rename(columns={0: 'player', 1: 'score', 2: 'soprannome'})
-    players['nome_finale'] = players['soprannome'].where(players['soprannome'].notna() & (players['soprannome'] != ''), players['player'])
+    players = players.rename(columns={0: 'player', 1: 'score', 2: 'nickname'})
+    players['nickname'] = players['nickname'].where(players['nickname'].notna() & (players['nickname'] != ''), players['player'])
 
-    return players['player'].to_list()
+    return players
+
+def df_sel_match(df_scores: pd.DataFrame, sel_tappa):
+    df_tappa = df_scores[df_scores['Tappa']==sel_tappa]
+
+    return df_tappa
+
 
 def podium_dataframe(df_scores, giocatori_to_keep):
     df_podium = df_scores[['Posizione', 'Giocatore']].copy()
