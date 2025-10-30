@@ -35,7 +35,7 @@ def show_login():
         st.session_state.nickname = selected_nickname
         st.session_state.logged_in = True
         st.session_state.loading = True
-        st.experimental_rerun()
+        st.rerun()
 
 
 # -------------------------------
