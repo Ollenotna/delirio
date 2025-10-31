@@ -46,7 +46,7 @@ with tabs[0]:
 
     sel_match = utilities.df_sel_match(df_scores, sel_tappa)
 
-    col1, col2, col3, col4 = st.columns(4, border=False)
+    col1, col2, col3, col4 = st.columns(4, border=True)
 
     with col1:
         st.markdown(
