@@ -201,7 +201,7 @@ with tabs[0]:
                         font-size: 5.5vw !important;
                     }}
                     .bonus-line {{
-                        height: 20vw !important;
+                        height: 22vw !important;
                         border-left-width: 0.8vw !important;
                     }}
                     .malus-line {{
