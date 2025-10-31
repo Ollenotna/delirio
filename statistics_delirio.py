@@ -222,8 +222,8 @@ with tabs[0]:
                 box-sizing: border-box;
             ">
                 <div class="label-text" style="font-size: 1.8vh; color: gray; margin-bottom: 1.5vh;">Bonus/Malus</div>
-                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 1vh; width: 100%;">
-                    <div class="bonus-line" style="border-left: 0.4vw solid #4CAF50; margin-right: 1vw; height: 12vh;"></div>
+                <div style="display: flex; align-items: stretch; justify-content: center; margin-bottom: 1vh; width: 100%;">
+                    <div class="bonus-line" style="border-left: 0.4vw solid #4CAF50; margin-right: 1vw;"></div>
                     <div class="value-text" style="display: flex; flex-direction: column; gap: 0.5vh; font-size: 2.5vh;">
                         <div style="display: flex; justify-content: space-between; min-width: 80px;">
                             <span>🥩</span>
@@ -239,8 +239,8 @@ with tabs[0]:
                         </div>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
-                    <div class="malus-line" style="border-left: 0.4vw solid #f44336; margin-right: 1vw; height: 4vh;"></div>
+                <div style="display: flex; align-items: stretch; justify-content: center; width: 100%;">
+                    <div class="malus-line" style="border-left: 0.4vw solid #f44336; margin-right: 1vw;"></div>
                     <div class="value-text" style="display: flex; justify-content: space-between; min-width: 80px; font-size: 2.5vh;">
                         <span>💔</span>
                         <span style="text-align: right; margin-left: 10px;">{sel_pt_malus}</span>
