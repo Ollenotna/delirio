@@ -50,61 +50,60 @@ with tabs[0]:
 
     with col1:
         st.markdown(
-        f"""
-        <div style="
+            f"""
+            <div style="
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                height: 188px;  /* same height for all columns */
+                min-height: 180px;
+                padding: 1rem;
                 text-align: center;
             ">
-            <div style="font-size:14px; color:gray;">Data</div>
-            <div style="font-size:22px; font-weight:bold;">{sel_match['Data'].iloc[0].strftime('%d/%m/%Y')}</div>
-            <div style="height:8px;"></div> <!-- small spacing -->
-            <div style="font-size:14px; color:gray;">Tappa</div>
-            <div style="font-size:22px; font-weight:bold;">{sel_tappa}</div>
-        </div>
-        """,
-        unsafe_allow_html=True
+                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Data</div>
+                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold;">{sel_match['Data'].iloc[0].strftime('%d/%m/%Y')}</div>
+                <div style="height: 8px;"></div>
+                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Tappa</div>
+                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold;">{sel_tappa}</div>
+            </div>
+            """,
+            unsafe_allow_html=True
         )
-            
-    with col2:    
+
+    with col2:
         df_sel_tappa = df_pairs[df_pairs['Tappa'] == sel_tappa]
-        # Find the row where the player is either Player 1 or Player 2
         row = df_sel_tappa[(df_sel_tappa['Player 1'] == st.session_state.player_name) | 
                         (df_sel_tappa['Player 2'] == st.session_state.player_name)]
-
-        # Determine the teammate
+        
         if not row.empty:
             teammate = row.iloc[0]['Player 2'] if row.iloc[0]['Player 1'] == st.session_state.player_name else row.iloc[0]['Player 1']
         else:
             teammate = 'NA'
-
+        
         st.markdown(
-        f"""
-        <div style="
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 180px;  /* fixed height to center inside */
-            text-align: center;
-        ">
-            <div style="font-size:14px; color:gray;">Compagno</div>
-            <div style="font-size:22px; font-weight:bold;">{teammate}</div>
-            
-        </div>
-        """,
-        unsafe_allow_html=True
+            f"""
+            <div style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 180px;
+                padding: 1rem;
+                text-align: center;
+            ">
+                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Compagno</div>
+                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold; word-break: break-word;">{teammate}</div>
+            </div>
+            """,
+            unsafe_allow_html=True
         )
 
     with col3:
         row = sel_match[sel_match['Giocatore'] == st.session_state.player_name]
+        
         if not row.empty and row['Presenza'].values[0] == 1:
             sel_posizione = row['Posizione'].values[0].astype(int)
             sel_punti = row['Punteggio'].values[0].astype(int)
-
             sel_posizione_string = f"{sel_posizione}° / {sel_match['Coppie'].iloc[0]}"
             sel_punti_string = f"+ {sel_punti}"
         else:
@@ -112,23 +111,24 @@ with tabs[0]:
             sel_punti_string = 'NA'
         
         st.markdown(
-        f"""
-        <div style="
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 188px;  /* fixed height to center inside */
-            text-align: center;
-        ">
-            <div style="font-size:14px; color:gray;">Piazzamento</div>
-            <div style="font-size:22px; font-weight:bold;">{sel_posizione_string} </div>
-            <div style="height:8px;"></div> <!-- small spacing -->
-            <div style="font-size:14px; color:gray;">Punteggio</div>
-            <div style="font-size:22px; font-weight:bold;">{sel_punti_string} </div>
-        </div>
-        """,
-        unsafe_allow_html=True
+            f"""
+            <div style="
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 180px;
+                padding: 1rem;
+                text-align: center;
+            ">
+                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Piazzamento</div>
+                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold;">{sel_posizione_string}</div>
+                <div style="height: 8px;"></div>
+                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Punteggio</div>
+                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold;">{sel_punti_string}</div>
+            </div>
+            """,
+            unsafe_allow_html=True
         )
 
     with col4:
@@ -143,49 +143,46 @@ with tabs[0]:
             sel_pt_cocktail = 'NA'
             sel_pt_bonus = 'NA'
             sel_pt_malus = 'NA'
-
+        
         st.markdown(
-        f"""
+            f"""
             <div style="
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 180px;  /* fixed height to center inside */
-            text-align: center;
-        ">
-
-        <div style="font-size:14px; color:gray;">Bonus/Malus</div>
-
-        <div style="display:flex; align-items:center; font-size:22px;">
-            <!-- Left line for positives -->
-            <div style="border-left:4px solid #4CAF50; margin-right:10px; height:85px;"></div>
-            <div style="display:flex; flex-direction:column; gap:4px;">
-                <div style="display:flex; justify-content:space-between; width:80px;">
-                    <span>🥩 <b></b></span>
-                    <span style="text-align:right;">{sel_pt_braciole}</span>
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                min-height: 180px;
+                padding: 1rem;
+                text-align: center;
+            ">
+                <div style="font-size: clamp(12px, 2vw, 14px); color: gray; margin-bottom: 8px;">Bonus/Malus</div>
+                <div style="display: flex; align-items: center; font-size: clamp(16px, 2.5vw, 22px);">
+                    <div style="border-left: 4px solid #4CAF50; margin-right: 8px; height: clamp(60px, 10vw, 85px);"></div>
+                    <div style="display: flex; flex-direction: column; gap: 4px;">
+                        <div style="display: flex; justify-content: space-between; min-width: 60px;">
+                            <span>🥩</span>
+                            <span style="text-align: right; margin-left: 8px;">{sel_pt_braciole}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; min-width: 60px;">
+                            <span>🍸</span>
+                            <span style="text-align: right; margin-left: 8px;">{sel_pt_cocktail}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; min-width: 60px;">
+                            <span>💎</span>
+                            <span style="text-align: right; margin-left: 8px;">{sel_pt_bonus}</span>
+                        </div>
+                    </div>
                 </div>
-                <div style="display:flex; justify-content:space-between; width:80px;">
-                    <span>🍸 <b></b></span>
-                    <span style="text-align:right;">{sel_pt_cocktail}</span>
-                </div>
-                <div style="display:flex; justify-content:space-between; width:80px;">
-                    <span>💎 <b></b></span>
-                    <span style="text-align:right;">{sel_pt_bonus}</span>
+                <div style="display: flex; align-items: center; font-size: clamp(16px, 2.5vw, 22px); margin-top: 4px;">
+                    <div style="border-left: 4px solid #f44336; margin-right: 8px; height: clamp(20px, 3vw, 25px);"></div>
+                    <div style="display: flex; justify-content: space-between; min-width: 60px;">
+                        <span>💔</span>
+                        <span style="text-align: right; margin-left: 8px;">{sel_pt_malus}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div style="display:flex; align-items:center; font-size:22px;">
-            <!-- Left line for malus -->
-            <div style="border-left:4px solid #f44336; margin-right:10px; height:25px;"></div>
-            <div style="display:flex; justify-content:space-between; width:80px;">
-                <span>💔 <b></b></span>
-                <span style="text-align:right;">{sel_pt_malus}</span>
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
+            """,
+            unsafe_allow_html=True
         )
 
     st.markdown("<div style='margin-top: 20px;'></div>", unsafe_allow_html=True)

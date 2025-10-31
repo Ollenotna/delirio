@@ -25,13 +25,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-col1, col2 = st.columns([0.7, 0.3], border=False)
-
-with col1:
-    st.markdown('<div class="title-container"><h1>🎮 Login</h1></div>', unsafe_allow_html=True)
-
-with col2:
-    st.image("images/logo_delirio.png", use_container_width=True)
+st.markdown('<div class="title-container"><h1>Effettua il login</h1></div>', unsafe_allow_html=True)
 
 selected_nickname = st.selectbox("Seleziona il tuo nome:", ["-- Nessun selezionato --"] + sorted(df_players['nickname'].to_list()))
 
