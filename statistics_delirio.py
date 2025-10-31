@@ -56,15 +56,16 @@ with tabs[0]:
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                min-height: 180px;
-                padding: 1rem;
+                height: 100%;
+                width: 100%;
+                padding: 5%;
                 text-align: center;
+                box-sizing: border-box;
             ">
-                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Data</div>
-                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold;">{sel_match['Data'].iloc[0].strftime('%d/%m/%Y')}</div>
-                <div style="height: 8px;"></div>
-                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Tappa</div>
-                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold;">{sel_tappa}</div>
+                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Data</div>
+                <div style="font-size: 3vh; font-weight: bold; margin-bottom: 1.5vh;">{sel_match['Data'].iloc[0].strftime('%d/%m/%Y')}</div>
+                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Tappa</div>
+                <div style="font-size: 3vh; font-weight: bold;">{sel_tappa}</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -87,12 +88,14 @@ with tabs[0]:
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                min-height: 180px;
-                padding: 1rem;
+                height: 100%;
+                width: 100%;
+                padding: 5%;
                 text-align: center;
+                box-sizing: border-box;
             ">
-                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Compagno</div>
-                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold; word-break: break-word;">{teammate}</div>
+                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Compagno</div>
+                <div style="font-size: 3vh; font-weight: bold; word-break: break-word; max-width: 100%;">{teammate}</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -117,15 +120,16 @@ with tabs[0]:
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                min-height: 180px;
-                padding: 1rem;
+                height: 100%;
+                width: 100%;
+                padding: 5%;
                 text-align: center;
+                box-sizing: border-box;
             ">
-                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Piazzamento</div>
-                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold;">{sel_posizione_string}</div>
-                <div style="height: 8px;"></div>
-                <div style="font-size: clamp(12px, 2vw, 14px); color: gray;">Punteggio</div>
-                <div style="font-size: clamp(18px, 3vw, 22px); font-weight: bold;">{sel_punti_string}</div>
+                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Piazzamento</div>
+                <div style="font-size: 3vh; font-weight: bold; margin-bottom: 1.5vh;">{sel_posizione_string}</div>
+                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Punteggio</div>
+                <div style="font-size: 3vh; font-weight: bold;">{sel_punti_string}</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -151,33 +155,35 @@ with tabs[0]:
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                min-height: 180px;
-                padding: 1rem;
+                height: 100%;
+                width: 100%;
+                padding: 5%;
                 text-align: center;
+                box-sizing: border-box;
             ">
-                <div style="font-size: clamp(12px, 2vw, 14px); color: gray; margin-bottom: 8px;">Bonus/Malus</div>
-                <div style="display: flex; align-items: center; font-size: clamp(16px, 2.5vw, 22px);">
-                    <div style="border-left: 4px solid #4CAF50; margin-right: 8px; height: clamp(60px, 10vw, 85px);"></div>
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        <div style="display: flex; justify-content: space-between; min-width: 60px;">
+                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1.5vh;">Bonus/Malus</div>
+                <div style="display: flex; align-items: center; font-size: 2.5vh; margin-bottom: 1vh;">
+                    <div style="border-left: 0.4vw solid #4CAF50; margin-right: 1vw; height: 12vh;"></div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5vh; flex: 1;">
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
                             <span>🥩</span>
-                            <span style="text-align: right; margin-left: 8px;">{sel_pt_braciole}</span>
+                            <span style="text-align: right;">{sel_pt_braciole}</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; min-width: 60px;">
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
                             <span>🍸</span>
-                            <span style="text-align: right; margin-left: 8px;">{sel_pt_cocktail}</span>
+                            <span style="text-align: right;">{sel_pt_cocktail}</span>
                         </div>
-                        <div style="display: flex; justify-content: space-between; min-width: 60px;">
+                        <div style="display: flex; justify-content: space-between; width: 100%;">
                             <span>💎</span>
-                            <span style="text-align: right; margin-left: 8px;">{sel_pt_bonus}</span>
+                            <span style="text-align: right;">{sel_pt_bonus}</span>
                         </div>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; font-size: clamp(16px, 2.5vw, 22px); margin-top: 4px;">
-                    <div style="border-left: 4px solid #f44336; margin-right: 8px; height: clamp(20px, 3vw, 25px);"></div>
-                    <div style="display: flex; justify-content: space-between; min-width: 60px;">
+                <div style="display: flex; align-items: center; font-size: 2.5vh;">
+                    <div style="border-left: 0.4vw solid #f44336; margin-right: 1vw; height: 4vh;"></div>
+                    <div style="display: flex; justify-content: space-between; width: 100%; flex: 1;">
                         <span>💔</span>
-                        <span style="text-align: right; margin-left: 8px;">{sel_pt_malus}</span>
+                        <span style="text-align: right;">{sel_pt_malus}</span>
                     </div>
                 </div>
             </div>
