@@ -45,13 +45,26 @@ with tabs[0]:
     )
 
     sel_match = utilities.df_sel_match(df_scores, sel_tappa)
-
-    col1, col2, col3, col4 = st.columns(4, border=True)
+    
+    col1, col2, col3, col4 = st.columns(4, border=False)
 
     with col1:
         st.markdown(
             f"""
-            <div style="
+            <style>
+                @media (max-width: 768px) {{
+                    .responsive-container {{
+                        padding: 8% !important;
+                    }}
+                    .label-text {{
+                        font-size: 3.5vw !important;
+                    }}
+                    .value-text {{
+                        font-size: 5.5vw !important;
+                    }}
+                }}
+            </style>
+            <div class="responsive-container" style="
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -62,10 +75,10 @@ with tabs[0]:
                 text-align: center;
                 box-sizing: border-box;
             ">
-                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Data</div>
-                <div style="font-size: 3vh; font-weight: bold; margin-bottom: 1.5vh;">{sel_match['Data'].iloc[0].strftime('%d/%m/%Y')}</div>
-                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Tappa</div>
-                <div style="font-size: 3vh; font-weight: bold;">{sel_tappa}</div>
+                <div class="label-text" style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Data</div>
+                <div class="value-text" style="font-size: 3vh; font-weight: bold; margin-bottom: 1.5vh;">{sel_match['Data'].iloc[0].strftime('%d/%m/%Y')}</div>
+                <div class="label-text" style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Tappa</div>
+                <div class="value-text" style="font-size: 3vh; font-weight: bold;">{sel_tappa}</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -83,7 +96,20 @@ with tabs[0]:
         
         st.markdown(
             f"""
-            <div style="
+            <style>
+                @media (max-width: 768px) {{
+                    .responsive-container {{
+                        padding: 8% !important;
+                    }}
+                    .label-text {{
+                        font-size: 3.5vw !important;
+                    }}
+                    .value-text {{
+                        font-size: 5.5vw !important;
+                    }}
+                }}
+            </style>
+            <div class="responsive-container" style="
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -94,8 +120,8 @@ with tabs[0]:
                 text-align: center;
                 box-sizing: border-box;
             ">
-                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Compagno</div>
-                <div style="font-size: 3vh; font-weight: bold; word-break: break-word; max-width: 100%;">{teammate}</div>
+                <div class="label-text" style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Compagno</div>
+                <div class="value-text" style="font-size: 3vh; font-weight: bold; word-break: break-word; max-width: 100%;">{teammate}</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -115,7 +141,20 @@ with tabs[0]:
         
         st.markdown(
             f"""
-            <div style="
+            <style>
+                @media (max-width: 768px) {{
+                    .responsive-container {{
+                        padding: 8% !important;
+                    }}
+                    .label-text {{
+                        font-size: 3.5vw !important;
+                    }}
+                    .value-text {{
+                        font-size: 5.5vw !important;
+                    }}
+                }}
+            </style>
+            <div class="responsive-container" style="
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -126,10 +165,10 @@ with tabs[0]:
                 text-align: center;
                 box-sizing: border-box;
             ">
-                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Piazzamento</div>
-                <div style="font-size: 3vh; font-weight: bold; margin-bottom: 1.5vh;">{sel_posizione_string}</div>
-                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Punteggio</div>
-                <div style="font-size: 3vh; font-weight: bold;">{sel_punti_string}</div>
+                <div class="label-text" style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Piazzamento</div>
+                <div class="value-text" style="font-size: 3vh; font-weight: bold; margin-bottom: 1.5vh;">{sel_posizione_string}</div>
+                <div class="label-text" style="font-size: 1.8vh; color: gray; margin-bottom: 1vh;">Punteggio</div>
+                <div class="value-text" style="font-size: 3vh; font-weight: bold;">{sel_punti_string}</div>
             </div>
             """,
             unsafe_allow_html=True
@@ -150,7 +189,28 @@ with tabs[0]:
         
         st.markdown(
             f"""
-            <div style="
+            <style>
+                @media (max-width: 768px) {{
+                    .responsive-container {{
+                        padding: 8% !important;
+                    }}
+                    .label-text {{
+                        font-size: 3.5vw !important;
+                    }}
+                    .value-text {{
+                        font-size: 5.5vw !important;
+                    }}
+                    .bonus-line {{
+                        height: 18vw !important;
+                        border-left-width: 0.8vw !important;
+                    }}
+                    .malus-line {{
+                        height: 6vw !important;
+                        border-left-width: 0.8vw !important;
+                    }}
+                }}
+            </style>
+            <div class="responsive-container" style="
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -161,10 +221,10 @@ with tabs[0]:
                 text-align: center;
                 box-sizing: border-box;
             ">
-                <div style="font-size: 1.8vh; color: gray; margin-bottom: 1.5vh;">Bonus/Malus</div>
-                <div style="display: flex; align-items: center; font-size: 2.5vh; margin-bottom: 1vh;">
-                    <div style="border-left: 0.4vw solid #4CAF50; margin-right: 1vw; height: 12vh;"></div>
-                    <div style="display: flex; flex-direction: column; gap: 0.5vh; flex: 1;">
+                <div class="label-text" style="font-size: 1.8vh; color: gray; margin-bottom: 1.5vh;">Bonus/Malus</div>
+                <div style="display: flex; align-items: center; margin-bottom: 1vh; width: 100%;">
+                    <div class="bonus-line" style="border-left: 0.4vw solid #4CAF50; margin-right: 1vw; height: 12vh;"></div>
+                    <div class="value-text" style="display: flex; flex-direction: column; gap: 0.5vh; flex: 1; font-size: 2.5vh;">
                         <div style="display: flex; justify-content: space-between; width: 100%;">
                             <span>🥩</span>
                             <span style="text-align: right;">{sel_pt_braciole}</span>
@@ -179,9 +239,9 @@ with tabs[0]:
                         </div>
                     </div>
                 </div>
-                <div style="display: flex; align-items: center; font-size: 2.5vh;">
-                    <div style="border-left: 0.4vw solid #f44336; margin-right: 1vw; height: 4vh;"></div>
-                    <div style="display: flex; justify-content: space-between; width: 100%; flex: 1;">
+                <div style="display: flex; align-items: center; width: 100%;">
+                    <div class="malus-line" style="border-left: 0.4vw solid #f44336; margin-right: 1vw; height: 4vh;"></div>
+                    <div class="value-text" style="display: flex; justify-content: space-between; width: 100%; flex: 1; font-size: 2.5vh;">
                         <span>💔</span>
                         <span style="text-align: right;">{sel_pt_malus}</span>
                     </div>
